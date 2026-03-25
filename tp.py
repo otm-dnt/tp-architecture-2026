@@ -26,15 +26,22 @@ class Matter4Iterator(Iterator):
         else:
             raise StopIteration
 
-# Classe représentant la salle de classe
+# Singleton pour SchoolClass
 class SchoolClass(Iterable):
+    _instance = None  # instance unique
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(SchoolClass, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        self.students = []
+        if not hasattr(self, 'students'):  # pour éviter de réinitialiser la liste
+            self.students = []
 
     def add_student(self, student):
         self.students.append(student)
 
-    # Classements existants
     def rank_matter_1(self):
         sorted_students = sorted(self.students, key=lambda s: s.m1, reverse=True)
         print("\nClassement matière 1 :")
@@ -54,25 +61,31 @@ class SchoolClass(Iterable):
             print(f"{student.name}: {student.m3}")
 
     def __iter__(self):
-        # Par défaut on retourne l'itérateur de la matière 1
         return iter(self.students)
 
-    # Méthode spécifique pour l'itérateur de la 4ème matière
     def iter_matter_4(self):
         return Matter4Iterator(self.students)
 
+
 if __name__ == "__main__":
-    school_class = SchoolClass()
-    school_class.add_student(Student('J', 10, 12, 13, 15))
-    school_class.add_student(Student('A', 8, 2, 17, 9))
-    school_class.add_student(Student('V', 9, 14, 14, 16))
+    # Même instance partout
+    school_class1 = SchoolClass()
+    school_class2 = SchoolClass()  # c’est la même instance
 
-    # Classements existants
-    school_class.rank_matter_1()
-    school_class.rank_matter_2()
-    school_class.rank_matter_3()
+    school_class1.add_student(Student('J', 10, 12, 13, 15))
+    school_class1.add_student(Student('A', 8, 2, 17, 9))
+    school_class1.add_student(Student('V', 9, 14, 14, 16))
 
-    # Parcours matière 4 avec l'itérateur
+    # Affichage des classements
+    school_class1.rank_matter_1()
+    school_class1.rank_matter_2()
+    school_class1.rank_matter_3()
+
+    # Parcours matière 4
     print("\nParcours matière 4 avec l'itérateur :")
-    for student in school_class.iter_matter_4():
+    for student in school_class1.iter_matter_4():
         print(f"{student.name}: {student.m4}")
+
+    # Vérification du singleton
+    print("\nVérification que school_class1 et school_class2 sont identiques :")
+    print(school_class1 is school_class2)  # True
