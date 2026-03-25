@@ -1,3 +1,4 @@
+from collections.abc import Iterable, Iterator
 class Student:
     def __init__(self, name, m1, m2, m3):
         self.name = name
@@ -9,7 +10,22 @@ class Student:
         return (self.m1 + self.m2 + self.m3) / 3
 
 
-class SchoolClass:
+# Itérateur pour la matière 1
+class Matter1Iterator(Iterator):
+    def __init__(self, students):
+        self.sorted_students = sorted(students, key=lambda s: s.m1, reverse=True)
+        self.index = 0
+
+    def __next__(self):
+        if self.index < len(self.sorted_students):
+            student = self.sorted_students[self.index]
+            self.index += 1
+            return student
+        else:
+            raise StopIteration
+
+# Classe représentant la salle de classe
+class SchoolClass(Iterable):
     def __init__(self):
         self.students = []
 
@@ -32,6 +48,8 @@ class SchoolClass:
         print("\nClassement matière 3 :")
         for student in sorted_students:
             print(f"{student.name}: {student.m3}")
+    def __iter__(self):
+        return Matter1Iterator(self.students)
         
 if __name__ == "__main__":
     # Création d'une instance de la classe
@@ -51,5 +69,10 @@ if __name__ == "__main__":
 
     # Tri matière 3
     school_class.rank_matter_3()
+    
+    # Parcours matière 1 avec l'itérateur
+    print("\nParcours des étudiants avec l'itérateur matière 1 :")
+    for student in school_class:
+        print(f"{student.name}: {student.m1}")
 
   
