@@ -20,6 +20,18 @@ class SchoolClass:
         print("\nClassement matière 1 :")
         for student in sorted_students:
             print(f"{student.name}: {student.m1}")
+            # Classement matière 2
+    def rank_matter_2(self):
+        sorted_students = sorted(self.students, key=lambda s: s.m2, reverse=True)
+        print("\nClassement matière 2 :")
+        for student in sorted_students:
+            print(f"{student.name}: {student.m2}")
+            # Classement matière 3
+    def rank_matter_3(self):
+        sorted_students = sorted(self.students, key=lambda s: s.m3, reverse=True)
+        print("\nClassement matière 3 :")
+        for student in sorted_students:
+            print(f"{student.name}: {student.m3}")
         
 if __name__ == "__main__":
     # Création d'une instance de la classe
@@ -34,5 +46,10 @@ if __name__ == "__main__":
 
     # Tri matière 1
     school_class.rank_matter_1()
+    # Tri matière 2
+    school_class.rank_matter_2()
+
+    # Tri matière 3
+    school_class.rank_matter_3()
 
   
